@@ -386,7 +386,7 @@ footer{background:#f0e8da;padding:32px 24px;text-align:center;border-top:1px sol
   width:100%;height:300px;border-radius:16px;border:none;
   outline:1px solid rgba(201,147,58,0.2);display:block;
 }
-.location-info{display:flex;flex-direction:column;gap:24px;}
+.location-info{display:flex;flex-direction:column;gap:32px;}
 .loc-item{display:flex;align-items:flex-start;gap:16px;}
 .loc-icon{
   font-size:1.3rem;flex-shrink:0;
@@ -396,19 +396,21 @@ footer{background:#f0e8da;padding:32px 24px;text-align:center;border-top:1px sol
   line-height:1;margin-top:2px;
 }
 .loc-title{
-  font-family:'Playfair Display',serif;font-size:0.75rem;
-  letter-spacing:0.28em;text-transform:uppercase;
-  color:var(--gold);margin-bottom:5px;opacity:0.8;
+  font-family:'Cormorant Garamond',serif;font-size:0.72rem;
+  letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:8px;opacity:0.85;
+  display:block;line-height:1;
 }
 .loc-text{
   font-family:'Cormorant Garamond',serif;font-size:1.05rem;
-  color:#1c1208;line-height:1.65;
+  color:#1c1208;line-height:1.7;display:block;margin:0;
 }
 .loc-link{
   font-family:'Cormorant Garamond',serif;font-size:1.05rem;
-  color:#1c1208;text-decoration:none;
+  color:#1c1208;text-decoration:none;display:block;
   border-bottom:1px solid rgba(201,147,58,0.4);
   transition:color 0.2s,border-color 0.2s;
+  width:fit-content;margin-top:2px;
 }
 .loc-link:hover{color:var(--gold);border-color:var(--gold);}
 .loc-insta{display:inline-flex;align-items:center;gap:7px;}
