@@ -345,7 +345,7 @@ footer{background:#f0e8da;padding:32px 24px;text-align:center;border-top:1px sol
   display:flex;gap:16px;width:max-content;
   animation:galleryScroll 90s linear infinite;
 }
-.gallery-track:hover{animation-play-state:running;}
+.gallery-wrapper{cursor:grab;}.gallery-wrapper:active{cursor:grabbing;}
 @keyframes galleryScroll{
   0%{transform:translateX(0);}
   100%{transform:translateX(-50%);}
@@ -732,6 +732,103 @@ function updateCountdown() {
 }
 updateCountdown();
 setInterval(updateCountdown, 1000);
+</script>
+
+<script>
+(function () {
+  const wrapper = document.querySelector('.gallery-wrapper');
+  const track   = document.querySelector('.gallery-track');
+  if (!wrapper || !track) return;
+
+  const ANIM_DURATION = 90; // seconds, must match CSS
+  let isDragging = false, isHorizontal = null;
+  let startX = 0, startY = 0, dragBaseX = 0;
+  let currentX = 0, velX = 0, lastX = 0, lastT = 0;
+  let rafId = null, resumeTimer = null;
+
+  function getComputedX() {
+    const m = new DOMMatrix(window.getComputedStyle(track).transform);
+    return m.m41;
+  }
+
+  function pauseAnim() {
+    currentX = getComputedX();
+    track.style.animation = 'none';
+    track.style.transform = `translateX(${currentX}px)`;
+  }
+
+  function resumeAnim() {
+    const halfW = track.scrollWidth / 2;
+    let pos = currentX % -halfW;
+    if (pos > 0) pos -= halfW;
+    const progress = Math.abs(pos) / halfW;
+    const delay = -(progress * ANIM_DURATION);
+    track.style.transform = '';
+    track.style.animation = `galleryScroll ${ANIM_DURATION}s linear ${delay}s infinite`;
+  }
+
+  function scheduleResume() {
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(function () { if (!isDragging) resumeAnim(); }, 2500);
+  }
+
+  function dragStart(x, y) {
+    cancelAnimationFrame(rafId);
+    clearTimeout(resumeTimer);
+    isDragging = true;
+    isHorizontal = null;
+    startX = x; startY = y;
+    pauseAnim();
+    dragBaseX = currentX;
+    lastX = x; lastT = Date.now(); velX = 0;
+    wrapper.style.cursor = 'grabbing';
+  }
+
+  function dragMove(x, y, evt) {
+    if (!isDragging) return;
+    if (isHorizontal === null) {
+      const dx = Math.abs(x - startX), dy = Math.abs(y - startY);
+      if (dx < 4 && dy < 4) return;
+      isHorizontal = dx >= dy;
+      if (!isHorizontal) { isDragging = false; wrapper.style.cursor = 'grab'; return; }
+    }
+    if (!isHorizontal) return;
+    if (evt && evt.cancelable) evt.preventDefault();
+    const now = Date.now(), dt = Math.max(now - lastT, 1);
+    velX = (x - lastX) / dt;
+    lastX = x; lastT = now;
+    currentX = dragBaseX + (x - startX);
+    track.style.transform = `translateX(${currentX}px)`;
+  }
+
+  function dragEnd() {
+    if (!isDragging) return;
+    isDragging = false;
+    isHorizontal = null;
+    wrapper.style.cursor = 'grab';
+    let v = velX * 180;
+    function glide() {
+      v *= 0.90;
+      currentX += v;
+      track.style.transform = `translateX(${currentX}px)`;
+      if (Math.abs(v) > 0.5) { rafId = requestAnimationFrame(glide); }
+      else { scheduleResume(); }
+    }
+    Math.abs(v) > 1 ? requestAnimationFrame(glide) : scheduleResume();
+  }
+
+  wrapper.style.cursor = 'grab';
+
+  // Mouse
+  wrapper.addEventListener('mousedown', function (e) { dragStart(e.clientX, e.clientY); e.preventDefault(); });
+  document.addEventListener('mousemove', function (e) { dragMove(e.clientX, e.clientY, e); });
+  document.addEventListener('mouseup', dragEnd);
+
+  // Touch
+  wrapper.addEventListener('touchstart', function (e) { dragStart(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
+  wrapper.addEventListener('touchmove', function (e) { dragMove(e.touches[0].clientX, e.touches[0].clientY, e); }, { passive: false });
+  wrapper.addEventListener('touchend', dragEnd);
+})();
 </script>
 
 <script src="https://www.eventbrite.ca/static/widgets/eb_widgets.js"></script>
