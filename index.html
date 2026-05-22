@@ -509,7 +509,7 @@ footer{background:#f0e8da;padding:32px 24px;text-align:center;border-top:1px sol
     <div class="cd-colon">:</div>
     <div class="cd-unit"><div class="cd-num" id="cd-secs">--</div><div class="cd-lbl">Seconds</div></div>
   </div>
-  <a href="https://www.eventbrite.ca/e/moonlight-mantras-by-the-lake-tickets-1985765937374" target="_blank" rel="noopener noreferrer" class="cd-ticket-btn">Get Tickets →</a>
+  <button type="button" class="cd-ticket-btn" onclick="document.getElementById('eventbrite-widget-modal-trigger-1985765937374').click()">Get Tickets →</button>
 </div>
 <!-- TITLE BAND below poster -->
 <div class="title-band">
@@ -523,7 +523,7 @@ footer{background:#f0e8da;padding:32px 24px;text-align:center;border-top:1px sol
   </div>
   <p class="hero-desc">A full moon music, mantras &amp; meditation evening<br>by Lake Ontario</p>
   <div class="cta-group">
-    <a href="https://www.eventbrite.ca/e/moonlight-mantras-by-the-lake-tickets-1985765937374" target="_blank" rel="noopener noreferrer" class="btn-primary">Get Tickets</a>
+    <button type="button" class="btn-primary" onclick="document.getElementById('eventbrite-widget-modal-trigger-1985765937374').click()">Get Tickets</button>
     <a href="#experience" class="btn-secondary">Discover More</a>
   </div>
 </div>
@@ -641,7 +641,8 @@ footer{background:#f0e8da;padding:32px 24px;text-align:center;border-top:1px sol
   <div class="register-title reveal">Join Us This Full Moon</div>
   <div class="register-sub">Reserve your place by the lake</div>
   <p class="register-desc reveal">Seats are limited. Secure your spot for this sacred evening of music, mantras &amp; meditation by Lake Ontario.</p>
-  <a href="https://www.eventbrite.ca/e/moonlight-mantras-by-the-lake-tickets-1985765937374" target="_blank" rel="noopener noreferrer" class="register-btn reveal">Get Tickets on Eventbrite →</a>
+  <noscript><a href="https://www.eventbrite.ca/e/moonlight-mantras-by-the-lake-tickets-1985765937374" rel="noopener noreferrer" target="_blank" class="register-btn reveal">Buy Tickets on Eventbrite</a></noscript>
+  <button id="eventbrite-widget-modal-trigger-1985765937374" type="button" class="register-btn reveal">Get Tickets on Eventbrite →</button>
 </section>
 
 <footer>
@@ -828,6 +829,17 @@ setInterval(updateCountdown, 1000);
   wrapper.addEventListener('touchmove', function (e) { dragMove(e.touches[0].clientX, e.touches[0].clientY, e); }, { passive: false });
   wrapper.addEventListener('touchend', dragEnd);
 })();
+</script>
+
+<script src="https://www.eventbrite.ca/static/widgets/eb_widgets.js"></script>
+<script type="text/javascript">
+  window.EBWidgets.createWidget({
+    widgetType: 'checkout',
+    eventId: '1985765937374',
+    modal: true,
+    modalTriggerElementId: 'eventbrite-widget-modal-trigger-1985765937374',
+    onOrderComplete: function() { console.log('Order complete!'); }
+  });
 </script>
 </body>
 </html>
